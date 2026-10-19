@@ -1,34 +1,48 @@
-* { 
+/* ===== 기본 초기화 ===== */
+* {
     box-sizing: border-box;
-    margin : 0;
-    margin : 0;
-    padding : 0;
+    margin: 0;
+    padding: 0;
 }
 
+/* ===== 전체 레이아웃 ===== */
 body {
     background-color: #fff;
-    color : black;
+    color: black;
     font-family: sans-serif;
     line-height: 1.6;
-    padding: 24px;
-    width: 800px;
-    margin: auto;
-    /* width: 800px */
+    padding: 24px 16px;
+    max-width: 800px;      /* 고정 width 대신 max-width → 작은 화면에서 가로 스크롤 없음 */
+    margin: 0 auto;        /* 페이지 전체 가운데 */
 }
 
 h1 {
     color: #0b6fb8;
 }
 
-img {
-    width: 100%;
-    height : 500px;
-    max-width: 800px;
+section {
+    margin: 0 0 40px 0;
 }
 
+.lead {
+    font-size: 18px;
+    color: #4a5876;
+    margin: 16px 0 8px;
+}
+
+/* ===== 이미지: 가운데 정렬 + 비율 유지 ===== */
+img {
+    display: block;        /* inline → block 으로 바꿔야 margin auto 가 먹음 */
+    margin: 0 auto;        /* 좌우 가운데 */
+    max-width: 100%;       /* 부모보다 커지지 않게 */
+    height: auto;          /* 비율 유지 (고정 500px 이면 사진이 찌그러짐) */
+}
+
+/* ===== 내비게이션 ===== */
 .nav {
-    display : flex;
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;   /* 모바일: 세로로 쌓기 */
+    gap: 8px;
     align-items: center;
     padding: 16px 20px;
     background-color: #9fa1f0;
@@ -42,13 +56,6 @@ img {
 }
 
 .menu {
-    text-align: center;
-    display: flex;
-    gap: 16px;
-    list-style: none
-}
-     
-.menu{
     display: flex;
     gap: 16px;
     list-style: none;
@@ -63,37 +70,18 @@ img {
     color: #0b6fb8;
 }
 
+/* ===== 굿즈 카드 ===== */
 .cards {
     display: grid;
-    margin : auto;
-    grid-template-columns: 1fr;
-    gap : 1rem;
+    grid-template-columns: 1fr;   /* 모바일: 1열 */
+    gap: 1rem;
     margin-top: 16px;
 }
 
-@media (min-width : 390px) {
-    .nav {
-        flex-direction: row;
-    }
-    .cards {grid-template-columns: 1fr 1fr;}
-}
-
-@media (min-width : 768px) {
-    .cards {grid-template-columns: 1fr 1fr 1fr;}
-}
-
-
-@media (min-width : 1024px) {
-    body{
-        width: 1200px;
-        margin : auto;
-    }
-    .cards {grid-template-columns: 1fr 1fr 1fr 1fr;}
-}
-
 .card {
+    display: flex;
+    flex-direction: column;   /* 제목 → 사진 → 설명을 세로로 */
     text-align: center;
-    height : auto;
     padding: 20px;
     border: 1px solid #d3dee6;
     border-radius: 8px;
@@ -101,15 +89,33 @@ img {
 }
 
 .card h3 {
-    height : auto;
-    padding: 20px;
-    border: 1px solid #d3dee6;
-    border-radius: 8px;
-    background-color: #fff;
+    margin-bottom: 12px;
 }
 
-section {
-    margin: 0 0 40px 0;
+.card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;      /* 사진 칸을 모두 정사각형으로 통일 */
+    height: auto;
+    object-fit: contain;      /* 사진이 잘리지 않고 칸 안에 맞춰 들어감 */
+    margin-bottom: 12px;
+}
+
+/* ===== 문의 폼 ===== */
+#contact {
+    border-top: 2px solid #0b6fb8;
+    padding-top: 24px;
+}
+
+fieldset {
+    border: 1px solid #d3dee6;
+    border-radius: 8px;
+    padding: 16px 20px 20px;
+}
+
+legend {
+    padding: 0 8px;
+    color: #0b6fb8;
+    font-weight: bold;
 }
 
 form label {
@@ -123,40 +129,40 @@ form textarea {
     display: block;
     width: 100%;
     padding: 8px;
-    border : 1px solid beige;
+    border: 1px solid #c9d3dc;    /* beige 는 흰 배경에서 거의 안 보임 */
     border-radius: 4px;
 }
 
 form button {
-    display : inline-block;
-    margin: 16px 0px;
+    display: inline-block;
+    margin: 16px 0;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    background-color:#0b6fb8;
+    background-color: #0b6fb8;
     color: #fff;
     cursor: pointer;
 }
 
-fieldset {
-    border: 1px solid #d3dee6;
-    border-radius: 8px;
-    padding: 16px 20px 20px;
+/* ===== 반응형 (작은 화면 → 큰 화면 순서) ===== */
+@media (min-width: 600px) {
+    .nav {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-legend {
-    padding: 0 8px;
-    color : #0b6fb8;
-    font-weight: bold;
+@media (min-width: 768px) {
+    .cards {
+        grid-template-columns: 1fr 1fr 1fr;   /* 카드가 3개라 3열이 딱 맞음 */
+    }
 }
 
-.lead {
-    font-size: 18px;
-    color: #4a5876;
-
-
-}
-#contact {
-    border-top: 2px solid #0b6fb8;
-    padding-top: 24px;
+@media (min-width: 1024px) {
+    body {
+        max-width: 1000px;
+    }
 }
