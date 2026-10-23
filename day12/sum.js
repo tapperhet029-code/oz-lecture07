@@ -48,3 +48,6 @@ const countPass = (list) => {
 };
 
 console.log(`60점 이상 ${countPass(scores)}명`);
+
+
+
