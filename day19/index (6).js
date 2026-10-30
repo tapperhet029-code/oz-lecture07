@@ -1,93 +1,135 @@
-// DAY 16 비동기처리
-// console.log("index.js가 연결됐습니다!!!");
+//day 19 고급함수와 고차함수
+console.log("index (6).js가 연결되었습니다.");
 
-// // 비동기 : 기다리지 않고 실행되는 다음줄
-// console.log("이미지 로딩 시작");
-// setTimeout(() => console.log("이미지 로딩 완료"), 2000);
-// console.log("다른 작업 수행");
+const x = 1;
 
-// // clearTimeout(timerId) timer 취소
-// const setBtn = document.querySelector("#set-btn");
-// const cancelBtn = document.querySelector("#cancel-btn");
-// const msgEl = document.querySelector("#msg");
-// let timeoutId = null;
-
-// setBtn.addEventListener("click", () => {
-//   msgEl.textContent = "3초 뒤에 알려 드립니다";
-//   timeoutId = setTimeout(() => {
-//     msgEl.textContent = "3초가 지났습니다";
-//   }, 3000);
-// });
-
-// cancelBtn.addEventListener("click", () => {
-//   clearTimeout(timeoutId);
-//   msgEl.textContent = "알림을 취소했습니다";
-// });
-
-// // setInterval - 정해진 시간마다 되풀이
-// let count = 0;
-// const intervalId = setInterval(() => {
-//   count += 1;
-//   console.log(`${count}초`);
-//   if (count == 5) {
-//     clearInterval(intervalId);
-//     console.log("멈춤");
-//   }
-// }, 1000);
-
-// // 콜백함수
-// function sayHello(name, callback) {
-//   console.log(`안녕 ${name}`);
-//   callback();
-// }
-
-// sayHello("태민", () => console.log("콜백 실행"));
-
-// // Promise
-// const order = new Promise((resolve, reject) => {
-//   //   setTimeout(() => resolve("아메리카노가 나왔습니다"), 2000);
-//   setTimeout(() => reject("재고가 없습니다"), 2000);
-// });
-// console.log(order);
-// order
-//   .then((message) => {
-//     console.log(message);
-//     console.log(order);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//     console.log(order);
-//   });
-
-// async await : Promise가 끝나야 다음줄 실행
-function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+function outer() {
+  const x = 10;
+  const inner = function () {
+    console.log(x);
+  };
+  return inner;
 }
 
-async function makeCoffee() {
-  console.log("주문");
-  await wait(1000);
-  console.log("1초 - 원두 갈기");
-  await wait(1000);
-  console.log("2초 - 커피 완성");
+const innerFunc = outer();
+innerFunc();
+
+//카운터 
+let num = 0;
+
+const increase = function() {
+  return ++num;
+};
+
+console.log(increase());
+console.log(increase());
+num = 100; // 의도하지 않은 전연변수 변경
+console.log(increase());
+
+//카운터 : 클로저로 숨기고 기억하기
+function makeIncrease() {
+  let num = 0;
+  return function () {
+    return ++num;
+  };
+}
+const increaseC = makeIncrease();
+console.log(increaseC());
+console.log(increaseC());
+console.log(increaseC());
+
+//this의 쓰임 : function과 arrow function
+const timer = {
+  seconds : 3,
+  start() {
+    setTimeout(function () {
+      console.log("fuction :", this.seconds);
+      console.log(this);
+    }, 0);
+    setTimeout(()=> {
+      console.log("화살표 :", this.seconds);
+      console.log(this);
+    }, 0);
+  },
+};
+timer.start();
+
+//this의 쓰임 : 이벤트 리스너의 this
+const likeBtn = document.querySelector("#like-Btn");
+
+likeBtn.addEventListener("click", function() {
+  this.textContent = "눌렀어요"
+  console.log("function:", this);
+});
+
+likeBtn.addEventListener("click", ()=> {
+  console.log(this);
+  console.log("화살표 :", this === window);
+});
+
+// 기본객체 Math
+console.log(Math.round(4.5));
+console.log(Math.floor(4.7));
+console.log(Math.ceil(4.2));
+console.log(Math.max(72,95, 58));
+console.log(Math.min(72,95, 58));
+console.log(Math.abs(-3));
+console.log(Math.PI);
+console.log(Math.random());
+
+//기본객체 Date
+const day = new Date();
+console.log(day.getFullYear());
+console.log(day.getMonth()+1);//월 0부터 시작
+console.log(day.getDate()); //일
+console.log(day.getDay()); //요일
+console.log(day.getHours());//시간
+
+//Higher Order Function 함수
+const add = (a) => (b) => a+b;
+
+const addFunction = (a) => {
+  let first = a;
+  return (b) => {
+    let second = b;
+    return a+b;
+  };
+};
+
+let a = 0;
+let b = 0;
+function add() {
+  return a+b;
+}
+ 
+const add = (a) => (b) => a+b;
+const add5 = add(5);
+
+console.log(add5);
+console.log(add5(10));
+
+function makeMultiple(n) {
+  return function(x) {
+    return x * n;
+  };
+}
+const double = makeMultiple(2);
+const triple = makeMultiple(3);
+console.log(double(4), triple(4)); 
+
+//for와 메서드 이어쓰기
+const scores = [72, 95, 58, 88, 64];
+
+//반복문 - 어떻게 할지를 한단계씩
+let total = 0;
+for (let i = 0; i<scores.length; i++) {
+  const score = scores[i];
+  if (score>=60) total += score;
 }
 
-makeCoffee();
+//method 이어쓰기 - 무엇을 할지를 차레로
+const total2 = scores
+  .filter((score) => score >=60)
+  .reduce((acc, score) => acc + score, 0);
+console.log("method :", total2);
 
-// try catch 오류 처리
-async function fetchWithError() {
-  try {
-    console.log("데이터 패치 시작");
-    await new Promise((resolve, reject) => {
-      setTimeout(() => reject("에러 발생"), 1000);
-    });
-  } catch (err) {
-    console.log("에러 : ", err);
-  } finally {
-    console.log("데이터 패치 종료");
-  }
-}
-
-fetchWithError();
