@@ -1,0 +1,11 @@
+프로젝트 생성
+
+## git 로컬 레파지터리 생성
+git init 
+
+## 원격 레파지터리 연결
+git remote add origin [github-url]
+ex : git remote add origin https://github.com/tapperhet029-code/oz-todo.git
+
+## 연결 확인
+git remote -v
